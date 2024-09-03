@@ -2,21 +2,32 @@
 #include <vector>
 #include <fstream>
 
-void show();
+//function definition
+void list();
 void add();
 void remove();
+void sate();
+void errormsg();
 
-void show(const std::string &filepath){
-	std::ifstream file;
-	file.open(filepath);
+//function explanation
+void list(const std::string &filepath){
+	std::string task;
+	std::cout << "list \n";
+
+	//file operation list
+	std::ifstream file(filepath, std::ios::in);
+	getline(file, task);
+	std::cout << task;
 	file.close();
 }
 
-void add(const std::string &filepath){
-	std::string input;
-	std::cout << "ADD CHANNNN!!!!!! >.< -" << "task" << "\n";
-	std::cin >> input;
-	std::cout << input;
+void add(const std::string &filepath, std::string task){
+
+	//file operation add
+	std::ofstream file(filepath, std::ios::app);
+	file << task;
+	file.close();
+	std::cout << task << "\n";
 }
 
 void remove(){
@@ -30,6 +41,11 @@ void sate(){
 	std::cout << "bored \n";
 }
 
+void errormsg(){
+	std::cout << "teri maa bc \n";
+}
+
+//main 
 int main (int argc, char* argv[]) {
 
 	//finding the user profile path and saving it
@@ -50,11 +66,29 @@ int main (int argc, char* argv[]) {
 	std::vector<std::string> task;
 	std::vector<bool> state;
 
-	//initialization of argument variables 
-	std::string arg1;
-	std::string arg2;
-	std::string arg3;
+	//initialization of array containing argument variables
+	//inserting the arguments into an array
+	std::string argument[4] = {}; 
+	if (argc < 2){
+		errormsg();
+	}
+	else{
+		for(int i = 0; i < argc; i++){
+			argument[i] = argv[i];
+		}
+	}
 	
-	//checking the commmand line arguments and working according
+	//checking the commmand line arguments and working accordingly
+	//list the todo list
+	if(argument[1] == "list"){
+		std::cout << "true \n";
+		list(path);
+	}
+	//add a new task
+	else if (argument[1] == "add"){
+		add(path, argument[2]);
+	}
+
+
 	return 0;
 }
