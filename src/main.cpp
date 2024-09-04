@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+#include <cstdio>
 
 //function declaration
 void list();
@@ -13,9 +14,9 @@ void updateState();
 void errormsg();
 
 //function definition
-void list(const std::string &filepath){
+void list(const std::string &filePath){
 	//file object
-	std::ifstream file(filepath, std::ios::in);
+	std::ifstream file(filePath, std::ios::in);
 
 	//Table formatting	
 	std::cout << std::setfill('-') << std::setw(1) << "+" << std::setw(3) << "-" << std::setw(1) << "+" 
@@ -35,14 +36,14 @@ void list(const std::string &filepath){
 	int i = 1;
 	while(getline(file, line)){
 		std::string task;
-		std::string statebuffer;
+		std::string stateBuffer;
 		std::string state;
 		std::stringstream inputString(line);
 
 		getline(inputString, task, ',');
 		std::string bufferState = "";
-		getline(inputString, statebuffer,',');
-		state = '[' + statebuffer + ']';
+		getline(inputString, stateBuffer,',');
+		state = '[' + stateBuffer + ']';
 		//state = atoi(bufferState.c_str());
 		line = "";
 		
@@ -59,9 +60,9 @@ void list(const std::string &filepath){
 	file.close();
 }
 
-void add(const std::string &filepath, std::string task){
+void add(const std::string &filePath, std::string task){
 	//file operation add
-	std::ofstream file(filepath, std::ios::app);
+	std::ofstream file(filePath, std::ios::app);
 
 	//writing the task
 	file << task //writing the task
@@ -73,13 +74,68 @@ void add(const std::string &filepath, std::string task){
 	std::cout << "Added Task!" << "\n";
 }
 
-void remove(const std::string &filepath, std::string input){
+void remove(const std::string &userPath, std::string input){
+	/*Since C++ is a what the fuck language to remove a line from a csv file the existing csv file must be
+	  copied to a new file while not copying the line you want removed then the newfile with the updated records 
+	  is to be renamed as the old file. God I unironically love C++ soo fucking much*/
 
+	std::string newFilePath = userPath + "\\newdata.csv";//path of the new data file
+	std::string existingFilePath = userPath + "\\data.csv";	
+
+	//creating file objects	
+	std::fstream fileInput;
+	std::ofstream fileOutput;
+	fileInput.open(existingFilePath, std::ios::in); //open existing file
+	if(!fileInput.is_open()){
+		std::cerr << "Error data file couldnt be opened \n";//checking if file opened succesfully
+	}
+
+	//initializing variables that will need for copying
 	int index = std::stoi(input);
-	int i = 0;
-	while (i < index){
+	int i = 1;
+	std::string line;
+
+	//checking if existing file is empty
+	fileInput.seekg(0,std::ios::end);
+	if(fileInput.tellg() < 1){
+		std::cout << "No tasks to delete \n";//if tasks empty
+		fileInput.close();
+	}
+	else{
+		//when task isnt empty
+		fileInput.clear();
+		fileInput.seekg(0, std::ios::beg);
 		
-		i++;
+		//creating the new file to copy the data into
+		fileOutput.open(newFilePath, std::ios::out);
+		//copying the contents into the newfile
+		while(std::getline(fileInput, line)){
+			if(i != index){
+			fileOutput << line << "\n";
+			}
+			line.clear();
+			i++;
+		}
+		fileInput.close();
+		fileOutput.close();
+		//std::cout << existingFilePath << "\n";
+		//std::cout << newFilePath << "\n";
+		
+		//remove() needs const *char as its arguments so does rename()
+		//turning the string path names to a char array cause the functions rename and remove need it ffs
+		/*const char* existingName = existingFilePath.c_str();
+		const char* newName = newFilePath.c_str();
+		std::cout << existingName[existingFilePath.size()] << "\n";
+		std::cout << newName << "\n";*/
+	 	
+		const char* existingName = &existingFilePath[0];
+		const char* newName = &newFilePath[0];
+		
+		int result = std::remove(existingName);
+		std::cout << result << "\n";
+		//int m = std::rename(newName, existingName);
+		//std::cout << m;
+
 	}
 }
 
@@ -95,17 +151,17 @@ void errormsg(){
 int main (int argc, char* argv[]) {
 
 	//finding the user profile path and saving it
-	char * userpath = std::getenv("USERPROFILE");
+	char * userPath = std::getenv("USERPROFILE");
 	std::string path;
-	if (userpath != nullptr){
-		path =  std::string(userpath) + "\\data.csv"; 
+	if (userPath != nullptr){
+		path =  std::string(userPath) + "\\data.csv"; 
 	}
 
 	//chekcing if the file exists and creating one if it doesnt
 	std::ifstream file(path);
 	if(!file){
-		std::ofstream createfile(path);
-		createfile.close();
+		std::ofstream createFile(path);
+		createFile.close();
 	}
 	
 
@@ -132,7 +188,7 @@ int main (int argc, char* argv[]) {
 	}
 	//remove a task
 	else if (argument[1] == "rm"){
-		remove(path, argument[2]);
+		remove(userPath, argument[2]);
 	}
 
 
