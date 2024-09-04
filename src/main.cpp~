@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
-#include <cstdio>
+#include <windows.h>
 
 //function declaration
 void list();
@@ -118,23 +118,14 @@ void remove(const std::string &userPath, std::string input){
 		}
 		fileInput.close();
 		fileOutput.close();
-		//std::cout << existingFilePath << "\n";
-		//std::cout << newFilePath << "\n";
-		
-		//remove() needs const *char as its arguments so does rename()
-		//turning the string path names to a char array cause the functions rename and remove need it ffs
-		/*const char* existingName = existingFilePath.c_str();
-		const char* newName = newFilePath.c_str();
-		std::cout << existingName[existingFilePath.size()] << "\n";
-		std::cout << newName << "\n";*/
-	 	
-		const char* existingName = &existingFilePath[0];
-		const char* newName = &newFilePath[0];
-		
-		int result = std::remove(existingName);
-		std::cout << result << "\n";
-		//int m = std::rename(newName, existingName);
-		//std::cout << m;
+
+		//using cmd here because remove() and renmae didnt work ffs kill me i hate iwdnows
+		std::string del = "del ";
+		del.append(existingFilePath);
+		std::cout << del;
+		const char* oldName;
+		oldName = &del;
+		system(del);
 
 	}
 }
