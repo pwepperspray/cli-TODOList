@@ -9,7 +9,7 @@
 void list();
 void add();
 void remove();
-void sate();
+void updateState();
 void errormsg();
 
 //function definition
@@ -54,14 +54,7 @@ void list(const std::string &filepath){
 		std::cout << std::setfill('-') << std::setw(1) << "+" << std::setw(3) << "-" << std::setw(1) << "+"
 			  << std::setw(100) << "-" << std::setw(1) << "+" << std::setw(5) << "-" 
 			  << std::setw(1) << "+" << std::endl;
-
-		//std::cout << i << " " << task << " " << state << "\n";
-		
-
-
-
 		i++;
-		//std::cout << i << " " << line << "\n";
 	}
 	file.close();
 }
@@ -80,14 +73,17 @@ void add(const std::string &filepath, std::string task){
 	std::cout << "Added Task!" << "\n";
 }
 
-void remove(){
-	int index;
-	std::cout << "Enter index : ";
-	std::cin >> index;
-	std::cout << index;
+void remove(const std::string &filepath, std::string input){
+
+	int index = std::stoi(input);
+	int i = 0;
+	while (i < index){
+		
+		i++;
+	}
 }
 
-void status(){
+void updateState(){
 	std::cout << "bored \n";
 }
 
@@ -133,6 +129,10 @@ int main (int argc, char* argv[]) {
 	//add a new task
 	else if (argument[1] == "add"){
 		add(path, argument[2]);
+	}
+	//remove a task
+	else if (argument[1] == "rm"){
+		remove(path, argument[2]);
 	}
 
 
