@@ -127,7 +127,7 @@ void remove(const std::string &userPath, std::string input){
 			std::cout << "Problem with the remove function \n";
 		}
 
-		std::string test = path + "\\data.csv";
+		std::string test = userPath + "\\data.csv";
 		int show = rename(newFilePath.c_str(), existingFilePath.c_str());
 		std::cout << show << "\n";
 

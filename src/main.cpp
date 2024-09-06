@@ -120,16 +120,15 @@ void remove(const std::string &userPath, std::string input){
 		fileOutput.close();
 
 		//deleting the existing file and renaming the updated file as the existing one
-		if(remove(existingFilePath.c_str()) == 0){
-			std::cout << "Task deleted \n";
+		int checkRemove = remove(existingFilePath.c_str());
+		int checkRename = rename(newFilePath.c_str(), existingFilePath.c_str());
+
+		if(checkRemove == 0 && checkRename == 0){
+			std::cout << "Task Updated! \n";
 		}
 		else{
-			std::cout << "Problem with the remove function \n";
+			std::cout << "Shit happened. something wrong \n";
 		}
-
-		std::string test = userPath + "\\data.csv";
-		int show = rename(newFilePath.c_str(), existingFilePath.c_str());
-		std::cout << show << "\n";
 
 	}
 }
