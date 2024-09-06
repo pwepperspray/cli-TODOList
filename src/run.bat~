@@ -1,3 +1,3 @@
 @echo off
 REM "FML"
-g++ main.cpp -o a
+g++ main.cpp -o ctd
