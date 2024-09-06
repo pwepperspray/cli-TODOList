@@ -176,14 +176,16 @@ void updateState(const std::string &userPath, std::string input, std::string sta
 				if (state == "True" || state == "true"){
 					fileOutput << task
 							   << ","
-							   << "x";
+							   << "x"
+							   <<"\n";
 				}
 				else if (state == "False" || state == "false"){
 					fileOutput << task
 							   << ","
-							   << " ";
+							   << " "
+							   << "\n";
 				}
-				
+				line.clear();
 			}
 			else{
 				fileOutput << line << "\n";
@@ -248,18 +250,18 @@ int main (int argc, char* argv[]) {
 	
 	//checking the commmand line arguments and working accordingly
 	//list the todo list
-	if(argument[1] == "list"){
+	if(argument[1] == "l"){
 		list(path);
 	}
 	//add a new task
-	else if (argument[1] == "add"){
+	else if (argument[1] == "a"){
 		add(path, argument[2]);
 	}
 	//remove a task
-	else if (argument[1] == "rm"){
+	else if (argument[1] == "r"){
 		remove(userPath, argument[2]);
 	}
-	else if (argument[1] == "state"){
+	else if (argument[1] == "s"){
 		updateState(userPath, argument[2], argument[3]);
 	}
 
