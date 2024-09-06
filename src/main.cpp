@@ -105,7 +105,7 @@ void remove(const std::string &userPath, std::string input){
 		//when task isnt empty
 		fileInput.clear();
 		fileInput.seekg(0, std::ios::beg);
-		
+
 		//creating the new file to copy the data into
 		fileOutput.open(newFilePath, std::ios::out);
 		//copying the contents into the newfile
@@ -119,13 +119,17 @@ void remove(const std::string &userPath, std::string input){
 		fileInput.close();
 		fileOutput.close();
 
-		//using cmd here because remove() and renmae didnt work ffs kill me i hate iwdnows
-		std::string del = "del ";
-		del.append(existingFilePath);
-		std::cout << del;
-		const char* oldName;
-		
-		system(del);
+		//deleting the existing file and renaming the updated file as the existing one
+		if(remove(existingFilePath.c_str()) == 0){
+			std::cout << "Task deleted \n";
+		}
+		else{
+			std::cout << "Problem with the remove function \n";
+		}
+
+		std::string test = userPath + "\\data.csv";
+		int show = rename(newFilePath.c_str(), existingFilePath.c_str());
+		std::cout << show << "\n";
 
 	}
 }
@@ -154,6 +158,7 @@ int main (int argc, char* argv[]) {
 		std::ofstream createFile(path);
 		createFile.close();
 	}
+	file.close();
 	
 
 	//initialization of array containing argument variables
