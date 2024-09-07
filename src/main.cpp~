@@ -124,7 +124,7 @@ void remove(const std::string &userPath, std::string input){
 		int checkRename = rename(newFilePath.c_str(), existingFilePath.c_str());
 
 		if(checkRemove == 0 && checkRename == 0){
-			std::cout << "Task Updated! \n";
+			std::cout << "Task Removed! \n";
 		}
 		else{
 			std::cout << "Shit happened. something wrong \n";
@@ -133,8 +133,84 @@ void remove(const std::string &userPath, std::string input){
 	}
 }
 
-void updateState(){
-	std::cout << "bored \n";
+void updateState(const std::string &userPath, std::string input, std::string state){
+	std::string newFilePath = userPath + "\\newdata.csv";//path of the new data file
+	std::string existingFilePath = userPath + "\\data.csv";	
+
+	//creating file objects	
+	std::fstream fileInput;
+	std::ofstream fileOutput;
+	
+	fileInput.open(existingFilePath, std::ios::in); //open existing file
+	if(!fileInput.is_open()){
+		std::cerr << "Error data file couldnt be opened \n";//checking if file opened succesfully
+	}
+
+	//initializing variables that will need for copying
+	int index = std::stoi(input);
+	int i = 1;
+	std::string line;
+	
+	//checking if existing file is empty
+	fileInput.seekg(0,std::ios::end);
+	if(fileInput.tellg() < 1){
+		std::cout << "No tasks to update \n";//if tasks empty
+		fileInput.close();
+	}
+	else{
+		//when task isnt empty
+		fileInput.clear();
+		fileInput.seekg(0, std::ios::beg);
+
+		//creating the new file to copy the data into
+		fileOutput.open(newFilePath, std::ios::out);
+		
+		//copying the contents into the newfile
+		while(std::getline(fileInput,line)){
+			if(i == index){
+				//updating state here
+				std::stringstream inputString(line);
+				std::string task;
+				
+				std::getline(inputString,task,',');
+				if (state == "True" || state == "true"){
+					fileOutput << task
+							   << ","
+							   << "x"
+							   <<"\n";
+				}
+				else if (state == "False" || state == "false"){
+					fileOutput << task
+							   << ","
+							   << " "
+							   << "\n";
+				}
+				line.clear();
+			}
+			else{
+				fileOutput << line << "\n";
+			}
+			line.clear();
+			i++;
+			
+		}
+		
+		fileInput.close();
+		fileOutput.close();
+
+		//deleting the existing file and renaming the updated file as the existing one
+		int checkRemove = remove(existingFilePath.c_str());
+		int checkRename = rename(newFilePath.c_str(), existingFilePath.c_str());
+
+		if(checkRemove == 0 && checkRename == 0){
+			std::cout << "Task state Updated! \n";
+		}
+		else{
+			std::cout << "Shit happened. something wrong \n";
+		}
+
+	}
+	
 }
 
 void errormsg(){
@@ -174,16 +250,19 @@ int main (int argc, char* argv[]) {
 	
 	//checking the commmand line arguments and working accordingly
 	//list the todo list
-	if(argument[1] == "list"){
+	if(argument[1] == "l"){
 		list(path);
 	}
 	//add a new task
-	else if (argument[1] == "add"){
+	else if (argument[1] == "a"){
 		add(path, argument[2]);
 	}
 	//remove a task
-	else if (argument[1] == "rm"){
+	else if (argument[1] == "r"){
 		remove(userPath, argument[2]);
+	}
+	else if (argument[1] == "s"){
+		updateState(userPath, argument[2], argument[3]);
 	}
 
 

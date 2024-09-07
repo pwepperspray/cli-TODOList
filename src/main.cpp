@@ -250,18 +250,18 @@ int main (int argc, char* argv[]) {
 	
 	//checking the commmand line arguments and working accordingly
 	//list the todo list
-	if(argument[1] == "l"){
+	if(argument[1] == "list"){
 		list(path);
 	}
 	//add a new task
-	else if (argument[1] == "a"){
+	else if (argument[1] == "add"){
 		add(path, argument[2]);
 	}
 	//remove a task
-	else if (argument[1] == "r"){
+	else if (argument[1] == "rm"){
 		remove(userPath, argument[2]);
 	}
-	else if (argument[1] == "s"){
+	else if (argument[1] == "state"){
 		updateState(userPath, argument[2], argument[3]);
 	}
 
